@@ -7,7 +7,7 @@ if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!')
 };
 
-// telegraf and markup
+// telegraf
 const { Telegraf } = require('telegraf');
 
 // wordslist
