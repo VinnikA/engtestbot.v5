@@ -8,10 +8,10 @@ function getBtn(arr) {
   let [a, b, c, d] = arr;
   return Markup.inlineKeyboard(
     [
-      [Markup.button.callback(a['ru'], a['eng'])],
-      [Markup.button.callback(b['ru'], b['eng'])],
-      [Markup.button.callback(c['ru'], c['eng'])],
-      [Markup.button.callback(d['ru'], d['eng'])]
+      [Markup.button.callback(a['ru'], a['eng']),
+      Markup.button.callback(b['ru'], b['eng'])],
+      [Markup.button.callback(c['ru'], c['eng']),
+      Markup.button.callback(d['ru'], d['eng'])]
     ]
   )
 };

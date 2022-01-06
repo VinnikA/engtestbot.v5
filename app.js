@@ -19,10 +19,17 @@ const text = require('./text');
 // buttonss
 const { startBtn, getBtn } = require('./btn');
 
+// test object class
+const { Test } = require('./test');
+
+// work with test object
+const { getAnswers, checkAnswer } = require('./supporfunction');
+
 // working code
 let btnBlock = getBtn([wordslist[0], wordslist[10], wordslist[20], wordslist[30]])
 // create new bot
 const bot = new Telegraf(token);
+const tests = [];
 
 bot.start((ctx) => {
   ctx.reply(text.welcome, startBtn)
@@ -45,26 +52,38 @@ bot.action('start_test', async (ctx) => testStart(ctx));
 async function testStart(ctx) {
   try {
     await ctx.answerCbQuery();
-    await ctx.reply('test started', btnBlock);
+    let test = await createTest(ctx.callbackQuery.from.id, ctx.callbackQuery.from.username);
+    await getAnswers(wordslist, test);
+    await ctx.reply(test.word.eng, getBtn(test.wordsArr));
   } catch (err) {
     console.error(err);
   }
 }
 
+function createTest(userId, userName) {
+  let test = new Test(userId, userName);
+  tests.push(test);
+  return test;
+}
+
 bot.on('callback_query', async (ctx) => {
   try {
     await ctx.answerCbQuery();
-    await ctx.reply('something');
-    await console.dir(ctx.callbackQuery.data);
-    // await ctx.telegram.answerCbQuery(ctx.callbackQuery.id)
+    let id = ctx.callbackQuery.from.id;
+    let test = await tests.find(el => el.userId === id);
+    if (test.count < 10) {
+      let answer = ctx.callbackQuery.data;
+      await checkAnswer(answer, test);
+      await getAnswers(wordslist, test);
+      await ctx.reply(test.word.eng, getBtn(test.wordsArr));
+    } else {
+      await ctx.reply('Thanks, Big Boobs!');
+    }
   } catch (err) {
     console.error(err);
   }
 });
 
-// bot.help((ctx) => ctx.reply('Send me a sticker'))
-// bot.on('sticker', (ctx) => ctx.reply('👍'))
-// bot.hears('hi', (ctx) => ctx.reply('Hey there'))
 bot.launch()
 
 // Enable graceful stop
