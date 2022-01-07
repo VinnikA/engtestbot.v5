@@ -27,7 +27,7 @@ async function checkAnswer(answer, testObj) {
 };
 
 function getResult(testObj, arr) {
-  if(testObj.rightAnswers / testObj.count) {
+  if (testObj.rightAnswers === testObj.count) {
     return 'Ваш словарный запас явно превышает 3000 слов!';
   } else {
     let result = Math.round((testObj.rightAnswers / testObj.count) * arr.length);
@@ -35,8 +35,22 @@ function getResult(testObj, arr) {
   }
 }
 
+function cleanTest(ctx, testsArr) {
+  let testId;
+  if (ctx.callbackQuery) {
+    testId = ctx.callbackQuery.from.id
+  } else {
+    testId = ctx.message.from.id
+  }
+  let index = testsArr.findIndex(el => el.userId === testId);
+  if (index >= 0) {
+    testsArr.splice(index, 1);
+  };
+}
+
 module.exports = {
   getAnswers,
   checkAnswer,
-  getResult
+  getResult,
+  cleanTest
 }

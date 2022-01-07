@@ -23,16 +23,20 @@ const { startBtn, getBtn } = require('./btn');
 const { Test } = require('./test');
 
 // work with test object
-const { getAnswers, checkAnswer, getResult} = require('./supporfunction');
+const { getAnswers, checkAnswer, getResult, cleanTest } = require('./supporfunction');
+
+// create log
+const { addLog } = require('./logfn')
 
 // working code
-let btnBlock = getBtn([wordslist[0], wordslist[10], wordslist[20], wordslist[30]])
+
 // create new bot
 const bot = new Telegraf(token);
 const tests = [];
 
 bot.start((ctx) => {
-  ctx.reply(text.welcome, startBtn)
+  cleanTest(ctx, tests);
+  ctx.reply(text.welcome, startBtn);
 })
 
 bot.action('test_info', async (ctx) => getInfo(ctx));
@@ -71,14 +75,15 @@ bot.on('callback_query', async (ctx) => {
     await ctx.answerCbQuery();
     let id = ctx.callbackQuery.from.id;
     let test = await tests.find(el => el.userId === id);
-    if (test.count < 10) {
-      let answer = ctx.callbackQuery.data;
-      await checkAnswer(answer, test);
+    let answer = ctx.callbackQuery.data;
+    await checkAnswer(answer, test);
+    if (test.count < 3) {
       await getAnswers(wordslist, test);
       await ctx.reply(test.word.eng, getBtn(test.wordsArr));
     } else {
-      console.log(getResult(test, wordslist));
+      addLog(test);
       await ctx.reply(getResult(test, wordslist));
+      cleanTest(ctx, tests);
     }
   } catch (err) {
     console.error(err);
