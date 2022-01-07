@@ -77,7 +77,7 @@ bot.on('callback_query', async (ctx) => {
     let test = await tests.find(el => el.userId === id);
     let answer = ctx.callbackQuery.data;
     await checkAnswer(answer, test);
-    if (test.count < 3) {
+    if (test.count < 100) {
       await getAnswers(wordslist, test);
       await ctx.reply(test.word.eng, getBtn(test.wordsArr));
     } else {
