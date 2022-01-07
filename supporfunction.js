@@ -26,7 +26,17 @@ async function checkAnswer(answer, testObj) {
   }
 };
 
+function getResult(testObj, arr) {
+  if(testObj.rightAnswers / testObj.count) {
+    return 'Ваш словарный запас явно превышает 3000 слов!';
+  } else {
+    let result = Math.round((testObj.rightAnswers / testObj.count) * arr.length);
+    return `Ваш словарный запас составляет приблизительно ${result} анлийских слов!`
+  }
+}
+
 module.exports = {
   getAnswers,
-  checkAnswer
+  checkAnswer,
+  getResult
 }

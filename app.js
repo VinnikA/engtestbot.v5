@@ -23,7 +23,7 @@ const { startBtn, getBtn } = require('./btn');
 const { Test } = require('./test');
 
 // work with test object
-const { getAnswers, checkAnswer } = require('./supporfunction');
+const { getAnswers, checkAnswer, getResult} = require('./supporfunction');
 
 // working code
 let btnBlock = getBtn([wordslist[0], wordslist[10], wordslist[20], wordslist[30]])
@@ -60,9 +60,9 @@ async function testStart(ctx) {
   }
 }
 
-function createTest(userId, userName) {
-  let test = new Test(userId, userName);
-  tests.push(test);
+async function createTest(userId, userName) {
+  let test = await new Test(userId, userName);
+  await tests.push(test);
   return test;
 }
 
@@ -77,7 +77,8 @@ bot.on('callback_query', async (ctx) => {
       await getAnswers(wordslist, test);
       await ctx.reply(test.word.eng, getBtn(test.wordsArr));
     } else {
-      await ctx.reply('Thanks, Big Boobs!');
+      console.log(getResult(test, wordslist));
+      await ctx.reply(getResult(test, wordslist));
     }
   } catch (err) {
     console.error(err);
