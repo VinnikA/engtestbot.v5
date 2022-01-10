@@ -25,9 +25,6 @@ const { Test } = require('./test');
 // work with test object
 const { getAnswers, checkAnswer, getResult, cleanTest } = require('./supporfunction');
 
-// create log
-const { addLog } = require('./logfn')
-
 // working code
 
 // create new bot
@@ -81,7 +78,6 @@ bot.on('callback_query', async (ctx) => {
       await getAnswers(wordslist, test);
       await ctx.reply(test.word.eng, getBtn(test.wordsArr));
     } else {
-      addLog(test);
       await ctx.reply(getResult(test, wordslist));
       cleanTest(ctx, tests);
     }
